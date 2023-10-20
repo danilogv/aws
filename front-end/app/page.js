@@ -9,6 +9,7 @@ const configPagina = {
 
 export default function Home() {
     const [funcionarios,alteraFuncionarios] = useState([]);
+    const [esperar,alteraEsperar] = useState(false);
 
     useEffect(() => {
         buscarFuncionarios();
@@ -29,6 +30,8 @@ export default function Home() {
 
     async function buscarFuncionarios() {
         try {
+            alteraEsperar(true);
+            //const url = "http://localhost:8080/funcionario";
             const url = "http://ec2-52-14-172-211.us-east-2.compute.amazonaws.com:8080/funcionario";
             const resposta = await fetch(url,{method: "GET",headers: configPagina});
             const msg = await obtemMensagemErro(resposta);
@@ -42,9 +45,10 @@ export default function Home() {
         catch(err) {
             console.log(err.message);
         }
+        finally {
+            alteraEsperar(false);
+        }
     }
-
-    
 
     function imprimirDadosTabela() {
         return funcionarios.map((funcionario) => (
@@ -60,23 +64,37 @@ export default function Home() {
     }
 
     return (
-        <div className="table-responsive">
-            <table className="table table-striped">
-                <caption>Lista de funcionários</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Nome</th>
-                        <th scope="col">CPF</th>
-                        <th scope="col">Salário</th>
-                        <th scope="col">Idade</th>
-                        <th scope="col">Data de Admissão</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {imprimirDadosTabela()}
-                </tbody>
-            </table>
+        <div className="container-fluid">
+            <div className="row flex-nowrap">
+                {
+                    esperar
+                    ?
+                        <div className="position-absolute top-50 start-50 w-auto">
+                            <div className="spinner-border text-secondary" role="status">
+                                <span className="visually-hidden">Carregando...</span>
+                            </div>
+                        </div>
+                    :
+                        undefined
+                }
+                <div className="table-responsive">
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">CPF</th>
+                                <th scope="col">Salário</th>
+                                <th scope="col">Idade</th>
+                                <th scope="col">Data de Admissão</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {imprimirDadosTabela()}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     );
 }
