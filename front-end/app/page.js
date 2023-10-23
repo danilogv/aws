@@ -32,7 +32,8 @@ export default function Home() {
         try {
             alteraEsperar(true);
             //const url = "http://localhost:8080/funcionario";
-            const url = "http://ec2-52-14-172-211.us-east-2.compute.amazonaws.com:8080/funcionario";
+            //const url = "http://ec2-52-14-172-211.us-east-2.compute.amazonaws.com:8080/funcionario";
+            const url = "http://www.danilo777.com:8080/funcionario";
             const resposta = await fetch(url,{method: "GET",headers: configPagina});
             const msg = await obtemMensagemErro(resposta);
 
